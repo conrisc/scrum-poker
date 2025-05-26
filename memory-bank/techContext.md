@@ -36,9 +36,8 @@ interface VotingRoom {
 
 - **Real-time Events**:
   - `vote-submitted` (client → server)
-  - `participants-updated` (server → client)
-  - `reveal-votes` (client → server)
-  - `votes-revealed` (server → client)
+  - `reveal-votes` (client → server) 
+  - `room-updated` (server → client)
 
 ## Development Setup
 1. Node.js v22+

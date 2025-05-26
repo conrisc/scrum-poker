@@ -45,15 +45,20 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     Client->>Server: vote-submitted (vote)
-    Server->>All Clients: participants-updated (participants)
+    Server->>All Clients: room-updated (fullRoomState)
 ```
 
 4. **Results Reveal**
 ```mermaid
 sequenceDiagram
     Client->>Server: reveal-votes
-    Server->>All Clients: votes-revealed (participantsWithVotes)
+    Server->>All Clients: room-updated (fullRoomState)
 ```
+
+5. **State Synchronization**
+- Single 'room-updated' event pattern
+- Contains complete room state (participants, votes, revealed status)
+- Reduces client-side state management complexity
 
 ## Room Management
 - 6-character alphanumeric room codes
