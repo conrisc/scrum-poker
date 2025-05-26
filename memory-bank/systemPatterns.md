@@ -24,21 +24,21 @@ graph TD
 1. **Room Creation**
 ```mermaid
 sequenceDiagram
-    Client->>Server: POST /create-room
-    Server->>Client: { roomId, userId }
+    Client->>Server: WebSocket connect
+    Client->>Server: create-room (pseudonym)
+    Server->>Client: user-id (userId)
+    Server->>Client: room-updated (roomDetails)
     Client->>LocalStorage: Save userId
-    Client->>Server: set-pseudonym (pseudonym)
-    Server->>Client: room-created (roomDetails)
 ```
 
 2. **Room Joining** 
 ```mermaid
 sequenceDiagram
-    Client->>Server: POST /join-room (roomId)
-    Server->>Client: { userId }
+    Client->>Server: WebSocket connect
+    Client->>Server: join-room (roomId, pseudonym)
+    Server->>Client: user-id (userId)
+    Server->>All Clients: room-updated (updatedRoomState)
     Client->>LocalStorage: Save userId
-    Client->>Server: set-pseudonym (pseudonym)
-    Server->>All Clients: participant-joined (updatedParticipants)
 ```
 
 3. **Voting Process**

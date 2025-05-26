@@ -35,9 +35,22 @@ interface VotingRoom {
 ```
 
 - **Real-time Events**:
-  - `vote-submitted` (client → server)
-  - `reveal-votes` (client → server) 
-  - `room-updated` (server → client)
+  - Client → Server:
+    - `create-room` (pseudonym: string)
+    - `join-room` (roomId: string, pseudonym: string)
+    - `vote-submitted` (roomId: string, vote: number | '?')
+    - `reveal-votes` (roomId: string)
+  
+  - Server → Client:
+    - `user-id` (userId: string)
+    - `room-updated` (roomState: VotingRoom)
+    - `error` ({ code: string })
+
+- **Error Codes**:
+  - `ROOM_NOT_FOUND`: Invalid room ID
+  - `DUPLICATE_PSEUDONYM`: Pseudonym already in use
+  - `INVALID_LENGTH`: Pseudonym must be 2-18 chars
+  - `INVALID_CHARACTERS`: Pseudonym must be alphanumeric
 
 ## Development Setup
 1. Node.js v22+
