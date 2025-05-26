@@ -2,6 +2,16 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { randomUUID } from 'crypto';
 
+function validatePseudonym(pseudonym: string): { valid: boolean, error?: string } {
+  if (!pseudonym || pseudonym.trim().length < 2 || pseudonym.trim().length > 18) {
+    return { valid: false, error: 'INVALID_LENGTH' };
+  }
+  if (!/^[a-zA-Z0-9]+$/.test(pseudonym)) {
+    return { valid: false, error: 'INVALID_CHARACTERS' };
+  }
+  return { valid: true };
+}
+
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
@@ -20,6 +30,7 @@ interface VotingRoom {
   id: string;
   participants: Participant[];
   revealed: boolean;
+  createdAt: Date;
 }
 
 const rooms = new Map<string, VotingRoom>();
@@ -34,6 +45,12 @@ io.on('connection', (socket) => {
   socket.on('create-room', (pseudonym: string) => {
     const roomId = generateRoomId();
 
+    const validation = validatePseudonym(pseudonym);
+    if (!validation.valid) {
+      socket.emit('error', { code: validation.error });
+      return;
+    }
+
     const newRoom: VotingRoom = {
       id: roomId,
       participants: [{
@@ -41,7 +58,8 @@ io.on('connection', (socket) => {
         pseudonym,
         vote: undefined
       }],
-      revealed: false
+      revealed: false,
+      createdAt: new Date()
     };
 
     rooms.set(roomId, newRoom);
@@ -57,6 +75,18 @@ io.on('connection', (socket) => {
     }
 
     const room = rooms.get(roomId)!;
+    
+    const validation = validatePseudonym(pseudonym);
+    if (!validation.valid) {
+      socket.emit('error', { code: validation.error });
+      return;
+    }
+
+    if (room.participants.some(p => p.pseudonym === pseudonym)) {
+      socket.emit('error', { code: 'DUPLICATE_PSEUDONYM' });
+      return;
+    }
+
     room.participants.push({
       id: userId,
       pseudonym,
