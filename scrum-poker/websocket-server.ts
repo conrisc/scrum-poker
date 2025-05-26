@@ -24,27 +24,47 @@ interface VotingRoom {
 
 const rooms = new Map<string, VotingRoom>();
 
+function generateRoomId(): string {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
 io.on('connection', (socket) => {
-  const participantId = randomUUID();
+  const userId = randomUUID();
+
+  socket.on('create-room', (pseudonym: string) => {
+    const roomId = generateRoomId();
+
+    const newRoom: VotingRoom = {
+      id: roomId,
+      participants: [{
+        id: userId,
+        pseudonym,
+        vote: undefined
+      }],
+      revealed: false
+    };
+
+    rooms.set(roomId, newRoom);
+    socket.join(roomId);
+    socket.emit('user-id', userId);
+    io.to(roomId).emit('room-updated', newRoom);
+  });
 
   socket.on('join-room', (roomId: string, pseudonym: string) => {
     if (!rooms.has(roomId)) {
-      rooms.set(roomId, {
-        id: roomId,
-        participants: [],
-        revealed: false
-      });
+      socket.emit('error', { code: 'ROOM_NOT_FOUND' });
+      return;
     }
 
     const room = rooms.get(roomId)!;
     room.participants.push({
-      id: participantId,
+      id: userId,
       pseudonym,
       vote: undefined
     });
 
     socket.join(roomId);
-    socket.emit('participant-id', participantId);
+    socket.emit('user-id', userId);
     io.to(roomId).emit('room-updated', room);
   });
 
@@ -52,7 +72,7 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomId);
     if (!room) return;
 
-    const participant = room.participants.find(p => p.id === participantId);
+    const participant = room.participants.find(p => p.id === userId);
     if (participant) {
       participant.vote = vote;
       io.to(roomId).emit('room-updated', room);
@@ -69,7 +89,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     rooms.forEach(room => {
-      room.participants = room.participants.filter(p => p.id !== participantId);
+      room.participants = room.participants.filter(p => p.id !== userId);
       io.to(room.id).emit('room-updated', room);
     });
   });
