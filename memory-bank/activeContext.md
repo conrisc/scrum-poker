@@ -1,18 +1,21 @@
 # Active Context
 
 ## Current Focus
-Implementing client-side WebSocket integration and voting interface.
+- Polish room creation/joining forms
 
 ## Next Implementation Steps
-1. **WebSocket Integration**
-   - Create Socket.IO client wrapper
-   - Implement Zustand store for room state
-   - Handle connection events
+1. **WebSocket Enhancements**
+   - Implement automatic reconnection
+   - Add connection status indicators
+   - Handle connection errors gracefully
 
-2. **Core Features**
-   - Voting card components
-   - Participant list display
-   - Moderator controls
+2. **Voting Interface**
+   - Room management UI polish
+   - Add vote submission feedback
+3. **Room Management**
+   - Polish room creation/joining forms
+   - Add form validation
+   - Implement room leave functionality
 
 3. **Completed Tasks**
 ```mermaid
@@ -25,7 +28,9 @@ gantt
     
     section Core
     WebSocket server        :done, 2025-05-26, 2d
-    Room management         :2025-05-28, 2d
+    WebSocket client        :done, 2025-05-29, 1d
+    Basic room functionality :done, 2025-05-29, 1d
+    Room management         :2025-05-29, 2d
     Basic voting UI         :2025-05-30, 2d
 ```
 

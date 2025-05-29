@@ -6,17 +6,20 @@
 - [x] Created memory bank structure
 - [x] Project initialization
 - [x] WebSocket server implementation (room management)
+- [x] Client-side WebSocket integration
+- [x] Zustand store setup
+- [x] Basic room functionality
 
 ## In Progress
-- [ ] Client-side WebSocket integration
-- [ ] Zustand store setup
-- [ ] Basic voting interface
+- [ ] Polish room creation/joining forms
+- [ ] Voting card components (80%)
+- [ ] Participant list display (50%)
 
 ## Pending
-- [ ] Room creation UI
-- [ ] Participant list display
 - [ ] Moderator controls
 - [ ] Vote statistics calculation
+- [ ] Mobile responsive design
+- [ ] Error handling UI
 
 ## Known Issues
 None yet
@@ -26,3 +29,5 @@ None yet
 - 2025-05-24: Finalized technical specifications
 - 2025-05-26: Initialized project
 - 2025-05-26: Implemented WebSocket server with room management
+- 2025-05-29: Completed client-side WebSocket integration
+- 2025-05-29: Implemented basic room functionality

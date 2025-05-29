@@ -1,101 +1,170 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { useWebSocket, useRoomStore } from './websocket-provider'
+import { useState } from 'react'
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
+
+export default function ScrumPoker() {
+  const { createRoom, joinRoom, submitVote, revealVotes } = useWebSocket()
+  const { room, userId, error } = useRoomStore()
+  const [pseudonym, setPseudonym] = useState('')
+  const [roomId, setRoomId] = useState('')
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false)
+
+  const handleCreateRoom = () => {
+    if (pseudonym.length >= 2) {
+      createRoom(pseudonym)
+      setIsCreatingRoom(true)
+    }
+  }
+
+  const handleJoinRoom = () => {
+    if (pseudonym.length >= 2 && roomId.length === 6) {
+      joinRoom(roomId, pseudonym)
+    }
+  }
+
+  const handleVote = (vote: number | '?') => {
+    if (room && userId) {
+      submitVote(room.id, vote)
+    }
+  }
+
+  const handleReveal = () => {
+    if (room) {
+      revealVotes(room.id)
+    }
+  }
+
+  if (!room) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full space-y-4">
+          <h1 className="text-2xl font-bold text-center">Scrum Poker</h1>
+          
+          <div className="space-y-2">
+            <label className="block text-sm font-medium">
+              Your Name
+            </label>
+            <input
+              type="text"
+              value={pseudonym}
+              onChange={(e) => setPseudonym(e.target.value)}
+              className="w-full p-2 border rounded"
+              placeholder="Enter your name"
+              minLength={2}
+              maxLength={18}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+
+          {!isCreatingRoom && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">
+                Room Code
+              </label>
+              <input
+                type="text"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                className="w-full p-2 border rounded"
+                placeholder="Enter 6-digit code"
+                minLength={6}
+                maxLength={6}
+              />
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            {!isCreatingRoom && (
+              <button
+                onClick={handleJoinRoom}
+                className="flex-1 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                disabled={!pseudonym || !roomId}
+              >
+                Join Room
+              </button>
+            )}
+            <button
+              onClick={handleCreateRoom}
+              className="flex-1 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+              disabled={!pseudonym}
+            >
+              {isCreatingRoom ? 'Creating Room...' : 'Create Room'}
+            </button>
+          </div>
+
+          {error && (
+            <div className="text-red-500 text-sm">
+              {error === 'ROOM_NOT_FOUND' && 'Room not found'}
+              {error === 'DUPLICATE_PSEUDONYM' && 'Name already in use'}
+            </div>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen p-4 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Room: {room.id}</h1>
+        <div className="text-sm">
+          {room.participants.length} participant{room.participants.length !== 1 && 's'}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Vote</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {FIBONACCI_VALUES.map((value) => (
+              <button
+                key={String(value)}
+                onClick={() => handleVote(value)}
+                className={`p-4 rounded-lg border-2 text-center font-medium ${
+                  room.participants.find(p => p.id === userId)?.vote === value
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleReveal}
+            disabled={room.revealed}
+            className={`mt-6 w-full p-3 rounded-lg ${
+              room.revealed ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}
+          >
+            {room.revealed ? 'Votes Revealed' : 'Reveal Votes'}
+          </button>
+        </div>
+
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Participants</h2>
+          <div className="space-y-2">
+            {room.participants.map((participant) => (
+              <div
+                key={participant.id}
+                className="flex justify-between items-center p-3 border rounded-lg"
+              >
+                <span>{participant.pseudonym}</span>
+                <span className="text-sm">
+                  {room.revealed && participant.vote !== undefined
+                    ? participant.vote
+                    : participant.vote !== undefined
+                    ? '✓'
+                    : '...'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
