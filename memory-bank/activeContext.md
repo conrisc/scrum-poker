@@ -1,21 +1,24 @@
 # Active Context
 
 ## Current Focus
-- Polish room creation/joining forms
+- Add moderator control "New voting"
 
 ## Next Implementation Steps
-1. **WebSocket Enhancements**
+
+1. **Room Management**
+   - Polish room creation/joining forms
+   - Add form validation
+   - Implement room leave functionality
+
+2. **WebSocket Enhancements**
    - Implement automatic reconnection
    - Add connection status indicators
    - Handle connection errors gracefully
 
-2. **Voting Interface**
+3. **Voting Interface**
    - Room management UI polish
    - Add vote submission feedback
-3. **Room Management**
-   - Polish room creation/joining forms
-   - Add form validation
-   - Implement room leave functionality
+
 
 3. **Completed Tasks**
 ```mermaid

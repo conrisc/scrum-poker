@@ -20,16 +20,16 @@ Scrum Poker is a collaborative estimation tool for agile teams to anonymously vo
    - Median of non-empty votes
 
 ## Room Controls
-1. New Vote - Clears current estimates
-2. Reset - Creates new voting session
+1. New Voting - Creates new voting session: resets estimates and sets votes to unrevealed
 3. Reveal Votes - Shows all submitted estimates
 
 ## User Stories
 - As a participant, I want to join a room with a simple code
 - As a participant, I want to submit/change my hidden estimate
 - As a participant, I want to see who has voted
-- As a moderator, I want to reveal all votes
 - As a participant, I want to see vote statistics (avg/median)
+- As a moderator, I want to reveal all votes
+- As a moderator, I want to create new voting session
 
 ## Success Metrics
 - Sub-100ms vote synchronization latency
