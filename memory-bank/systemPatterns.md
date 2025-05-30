@@ -55,7 +55,14 @@ sequenceDiagram
     Server->>All Clients: room-updated (fullRoomState)
 ```
 
-5. **State Synchronization**
+5. **New Voting Session**
+```mermaid
+sequenceDiagram
+    Client->>Server: new-voting
+    Server->>All Clients: room-updated (reset votes, hidden state)
+```
+
+6. **State Synchronization**
 - Single 'room-updated' event pattern
 - Contains complete room state (participants, votes, revealed status)
 - Reduces client-side state management complexity

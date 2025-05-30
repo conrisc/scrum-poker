@@ -1,16 +1,17 @@
 'use client'
 
 import { useWebSocket, useRoomStore } from './websocket-provider'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
 
 export default function ScrumPoker() {
-  const { createRoom, joinRoom, submitVote, revealVotes } = useWebSocket()
+  const { createRoom, joinRoom, submitVote, revealVotes, newVoting } = useWebSocket()
   const { room, userId, error } = useRoomStore()
   const [pseudonym, setPseudonym] = useState('')
   const [roomId, setRoomId] = useState('')
   const [isCreatingRoom, setIsCreatingRoom] = useState(false)
+  const confirmDialog = useRef<HTMLDialogElement>(null)
 
   const handleCreateRoom = () => {
     if (pseudonym.length >= 2) {
@@ -35,6 +36,21 @@ export default function ScrumPoker() {
     if (room) {
       revealVotes(room.id)
     }
+  }
+
+  const handleNewVoting = () => {
+    confirmDialog.current?.showModal()
+  }
+
+  const confirmNewVoting = () => {
+    if (room) {
+      newVoting(room.id)
+      confirmDialog.current?.close()
+    }
+  }
+
+  const cancelNewVoting = () => {
+    confirmDialog.current?.close()
   }
 
   if (!room) {
@@ -133,15 +149,23 @@ export default function ScrumPoker() {
             ))}
           </div>
 
-          <button
-            onClick={handleReveal}
-            disabled={room.revealed}
-            className={`mt-6 w-full p-3 rounded-lg ${
-              room.revealed ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-600 text-white'
-            }`}
-          >
-            {room.revealed ? 'Votes Revealed' : 'Reveal Votes'}
-          </button>
+          <div className="mt-6 space-y-3">
+            <button
+              onClick={handleReveal}
+              disabled={room.revealed}
+              className={`w-full p-3 rounded-lg ${
+                room.revealed ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              {room.revealed ? 'Votes Revealed' : 'Reveal Votes'}
+            </button>
+            <button
+              onClick={handleNewVoting}
+              className="w-full p-3 rounded-lg bg-green-500 hover:bg-green-600 text-white"
+            >
+              New Voting
+            </button>
+          </div>
         </div>
 
         <div>
@@ -165,6 +189,30 @@ export default function ScrumPoker() {
           </div>
         </div>
       </div>
+
+      {/* New Voting Confirmation Modal */}
+      <dialog ref={confirmDialog} className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Start New Voting Session?</h3>
+          <p className="py-4">This will reset and hide all estimates.</p>
+          <div className="modal-action">
+            <label 
+              htmlFor="new-voting-modal" 
+              className="btn"
+              onClick={cancelNewVoting}
+            >
+              Cancel
+            </label>
+            <label 
+              htmlFor="new-voting-modal" 
+              className="btn btn-primary"
+              onClick={confirmNewVoting}
+            >
+              Confirm
+            </label>
+          </div>
+        </div>
+      </dialog>
     </div>
   )
 }

@@ -46,6 +46,7 @@ interface WebSocketContextValue {
   joinRoom: (roomId: string, pseudonym: string) => void
   submitVote: (roomId: string, vote: number | '?') => void
   revealVotes: (roomId: string) => void
+  newVoting: (roomId: string) => void
 }
 
 const WebSocketContext = createContext<WebSocketContextValue>({
@@ -57,6 +58,7 @@ const WebSocketContext = createContext<WebSocketContextValue>({
   joinRoom: () => {},
   submitVote: () => {},
   revealVotes: () => {},
+  newVoting: () => {},
 })
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
@@ -131,6 +133,10 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     socket?.emit('reveal-votes', roomId)
   }
 
+  const newVoting = (roomId: string) => {
+    socket?.emit('new-voting', roomId)
+  }
+
   return (
     <WebSocketContext.Provider value={{
       socket,
@@ -140,7 +146,8 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       createRoom,
       joinRoom,
       submitVote,
-      revealVotes
+      revealVotes,
+      newVoting
     }}>
       {children}
     </WebSocketContext.Provider>

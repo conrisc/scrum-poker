@@ -5,6 +5,7 @@
    - Next.js (App Router)
    - TypeScript
    - Tailwind CSS
+   - DaisyUI
    - Zustand (state management)
    - Socket.IO Client
 
@@ -40,6 +41,7 @@ interface VotingRoom {
     - `join-room` (roomId: string, pseudonym: string)
     - `vote-submitted` (roomId: string, vote: number | '?')
     - `reveal-votes` (roomId: string)
+    - `new-voting` (roomId: string)
   
   - Server → Client:
     - `user-id` (userId: string)

@@ -117,6 +117,18 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('room-updated', room);
   });
 
+  socket.on('new-voting', (roomId: string) => {
+    const room = rooms.get(roomId);
+    if (!room) {
+      socket.emit('error', { code: 'ROOM_NOT_FOUND' });
+      return;
+    }
+
+    room.participants.forEach(p => p.vote = undefined);
+    room.revealed = false;
+    io.to(roomId).emit('room-updated', room);
+  });
+
   socket.on('disconnect', () => {
     rooms.forEach(room => {
       room.participants = room.participants.filter(p => p.id !== userId);

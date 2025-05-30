@@ -9,6 +9,8 @@
 - [x] Client-side WebSocket integration
 - [x] Zustand store setup
 - [x] Basic room functionality
+- [x] New voting session control
+- [x] Moderator controls
 
 ## In Progress
 - [ ] Polish room creation/joining forms
@@ -16,7 +18,6 @@
 - [ ] Participant list display (50%)
 
 ## Pending
-- [ ] Moderator controls
 - [ ] Vote statistics calculation
 - [ ] Mobile responsive design
 - [ ] Error handling UI
@@ -31,3 +32,4 @@ None yet
 - 2025-05-26: Implemented WebSocket server with room management
 - 2025-05-29: Completed client-side WebSocket integration
 - 2025-05-29: Implemented basic room functionality
+- 2025-05-30: Added "New voting" controll to start new voting session

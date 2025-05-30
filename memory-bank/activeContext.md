@@ -1,7 +1,7 @@
 # Active Context
 
 ## Current Focus
-- Add moderator control "New voting"
+- Add vote statistics UI elements
 
 ## Next Implementation Steps
 
@@ -32,9 +32,10 @@ gantt
     section Core
     WebSocket server        :done, 2025-05-26, 2d
     WebSocket client        :done, 2025-05-29, 1d
+    Basic voting UI         :done, 2025-05-29, 1d
     Basic room functionality :done, 2025-05-29, 1d
-    Room management         :2025-05-29, 2d
-    Basic voting UI         :2025-05-30, 2d
+    Room management         :done, 2025-05-30, 1d
+    Vote statistics         :2025-05-31, 1d
 ```
 
 ## Key Updates
