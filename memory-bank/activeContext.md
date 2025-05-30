@@ -9,6 +9,7 @@
    - Polish room creation/joining forms
    - Add form validation
    - Implement room leave functionality
+   - Define routing for room /{roomId}
 
 2. **WebSocket Enhancements**
    - Implement automatic reconnection

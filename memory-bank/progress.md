@@ -19,6 +19,7 @@
 
 ## Pending
 - [ ] Vote statistics calculation
+- [ ] Room routing /{roomId}
 - [ ] Mobile responsive design
 - [ ] Error handling UI
 
