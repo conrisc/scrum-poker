@@ -6,14 +6,18 @@ import { useRouter } from 'next/navigation'
 
 export default function ScrumPoker() {
   const { createRoom, joinRoom } = useWebSocket()
-  const { room, error, userId, setRoom } = useRoomStore()
+  const { room, error, userId, clearRoom } = useRoomStore()
   const router = useRouter()
   const [pseudonym, setPseudonym] = useState('')
   const [roomId, setRoomId] = useState('')
   const [isCreatingRoom, setIsCreatingRoom] = useState(false)
 
   useEffect(() => {
-    if (room && !error) {
+    clearRoom()
+  }, [])
+
+  useEffect(() => {
+    if (pseudonym && room && !error) {
       localStorage.setItem('scrumPokerUser', JSON.stringify({
         userId,
         pseudonym

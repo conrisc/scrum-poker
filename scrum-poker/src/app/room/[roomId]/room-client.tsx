@@ -27,24 +27,28 @@ function calculateMedian(votes: (number | '?')[]): number | null {
 const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
 
 export default function RoomClient({ roomId }: { roomId: string }) {
-  const { submitVote, revealVotes, newVoting, joinRoom } = useWebSocket()
+  const { submitVote, revealVotes, newVoting, joinRoom, isConnected } = useWebSocket()
   const { room, userId, error, clearRoom } = useRoomStore()
   const confirmDialog = useRef<HTMLDialogElement>(null)
   const router = useRouter()
 
-  // Join room on roomId init/change
+  // Auto-join room when conditions are met
   useEffect(() => {
     const userData = localStorage.getItem('scrumPokerUser')
-    if (!userData) {
-      redirectToHome();
+    if (!userData || !roomId) {
+      redirectToHome('No user data.')
       return
     }
 
-    const { pseudonym } = JSON.parse(userData)
-    if (!room && pseudonym) {
+    if (room || !isConnected) return
+
+    const timer = setTimeout(() => {
+      const { pseudonym } = JSON.parse(userData)
       joinRoom(roomId, pseudonym)
-    }
-  }, [roomId, room, joinRoom, router])
+    }, 800)
+
+    return () => clearTimeout(timer)
+  }, [roomId, room, joinRoom, isConnected])
 
   useEffect(() => {
     const userData = localStorage.getItem('scrumPokerUser')
@@ -60,7 +64,7 @@ export default function RoomClient({ roomId }: { roomId: string }) {
   // Redirect to home on error
   useEffect(() => {
     if (error === 'ROOM_NOT_FOUND' || error === 'DUPLICATE_PSEUDONYM') {
-      redirectToHome()
+      redirectToHome(`Room error: ${error}`)
     }
   }, [error, router, clearRoom])
 
@@ -77,9 +81,8 @@ export default function RoomClient({ roomId }: { roomId: string }) {
     }
   }, [room])
 
-  const redirectToHome = () => {
-    clearRoom()
-    localStorage.removeItem('scrumPokerUser')
+  const redirectToHome = (msg: string = '') => {
+    console.log(`Redirecting to home. ${msg}`)
     router.push('/')
   }
 

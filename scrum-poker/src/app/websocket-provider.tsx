@@ -117,26 +117,31 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     socket?.disconnect()
   }
 
+  const emitWithErrorClear = (event: string, ...args: any[]) => {
+    setError(null)
+    socket?.emit(event, ...args)
+  }
+
   const createRoom = (pseudonym: string) => {
     console.log('Emitting create-room with pseudonym:', pseudonym)
-    socket?.emit('create-room', pseudonym)
+    emitWithErrorClear('create-room', pseudonym)
   }
 
   const joinRoom = (roomId: string, pseudonym: string) => {
     console.log('Emitting join-room with roomId:', roomId, 'pseudonym:', pseudonym)
-    socket?.emit('join-room', roomId, pseudonym)
+    emitWithErrorClear('join-room', roomId, pseudonym)
   }
 
   const submitVote = (roomId: string, vote: number | '?') => {
-    socket?.emit('vote-submitted', roomId, vote)
+    emitWithErrorClear('vote-submitted', roomId, vote)
   }
 
   const revealVotes = (roomId: string) => {
-    socket?.emit('reveal-votes', roomId)
+    emitWithErrorClear('reveal-votes', roomId)
   }
 
   const newVoting = (roomId: string) => {
-    socket?.emit('new-voting', roomId)
+    emitWithErrorClear('new-voting', roomId)
   }
 
   return (
