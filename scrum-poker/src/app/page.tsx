@@ -1,7 +1,27 @@
 'use client'
 
 import { useWebSocket, useRoomStore } from './websocket-provider'
-import { useRef, useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
+
+function calculateAverage(votes: (number | '?')[]): number | null {
+  const numericVotes = votes.filter((v): v is number => typeof v === 'number')
+  if (numericVotes.length === 0) return null
+  const sum = numericVotes.reduce((acc, val) => acc + val, 0)
+  const avg = sum / numericVotes.length
+  return Math.round(avg * 10) / 10
+}
+
+function calculateMedian(votes: (number | '?')[]): number | null {
+  const numericVotes = votes.filter((v): v is number => typeof v === 'number')
+  if (numericVotes.length === 0) return null
+  
+  numericVotes.sort((a, b) => a - b)
+  const mid = Math.floor(numericVotes.length / 2)
+  
+  return numericVotes.length % 2 !== 0 
+    ? numericVotes[mid]
+    : Math.round((numericVotes[mid - 1] + numericVotes[mid]) / 2 * 10) / 10
+}
 
 const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
 
@@ -12,6 +32,19 @@ export default function ScrumPoker() {
   const [roomId, setRoomId] = useState('')
   const [isCreatingRoom, setIsCreatingRoom] = useState(false)
   const confirmDialog = useRef<HTMLDialogElement>(null)
+
+  const stats = useMemo(() => {
+    if (!room || !room.revealed) return null
+    
+    const votes = room.participants
+      .map(p => p.vote)
+      .filter(v => v !== undefined) as (number | '?')[]
+      
+    return {
+      average: calculateAverage(votes),
+      median: calculateMedian(votes)
+    }
+  }, [room])
 
   const handleCreateRoom = () => {
     if (pseudonym.length >= 2) {
@@ -170,6 +203,20 @@ export default function ScrumPoker() {
 
         <div>
           <h2 className="text-xl font-semibold mb-4">Participants</h2>
+          
+          {stats && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg shadow-sm">
+              <div className="flex justify-between text-blue-900">
+                <span className="font-medium">Average:</span>
+                <span className="font-bold">{stats.average ?? '-'}</span>
+              </div>
+              <div className="flex justify-between text-blue-900 mt-2">
+                <span className="font-medium">Median:</span>
+                <span className="font-bold">{stats.median ?? '-'}</span>
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
             {room.participants.map((participant) => (
               <div

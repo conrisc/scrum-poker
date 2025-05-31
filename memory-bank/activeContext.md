@@ -1,7 +1,7 @@
 # Active Context
 
 ## Current Focus
-- Add vote statistics UI elements
+- Implement routing for room /{roomId}
 
 ## Next Implementation Steps
 
@@ -9,7 +9,6 @@
    - Polish room creation/joining forms
    - Add form validation
    - Implement room leave functionality
-   - Define routing for room /{roomId}
 
 2. **WebSocket Enhancements**
    - Implement automatic reconnection
@@ -36,7 +35,8 @@ gantt
     Basic voting UI         :done, 2025-05-29, 1d
     Basic room functionality :done, 2025-05-29, 1d
     Room management         :done, 2025-05-30, 1d
-    Vote statistics         :2025-05-31, 1d
+    Vote statistics         :done, 2025-05-31, 1d
+    Room routing            :2025-05-31, 1d
 ```
 
 ## Key Updates
