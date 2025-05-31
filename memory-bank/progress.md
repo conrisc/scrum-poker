@@ -12,6 +12,7 @@
 - [x] New voting session control
 - [x] Moderator controls
 - [x] Vote statistics calculation
+- [x] Room routing /{roomId} with error handling
 
 ## In Progress
 - [ ] Polish room creation/joining forms
@@ -19,7 +20,6 @@
 - [ ] Participant list display (50%)
 
 ## Pending
-- [ ] Room routing /{roomId}
 - [ ] Mobile responsive design
 - [ ] Error handling UI
 
@@ -35,3 +35,4 @@ None yet
 - 2025-05-29: Implemented basic room functionality
 - 2025-05-30: Added "New voting" control to start new voting session
 - 2025-05-31: Implemented vote statistics (average & median)
+- 2025-05-31: Added routing for room with error handling

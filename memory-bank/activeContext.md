@@ -1,12 +1,11 @@
 # Active Context
 
 ## Current Focus
-- Implement routing for room /{roomId}
+- Polish room creation/joining forms
 
 ## Next Implementation Steps
 
 1. **Room Management**
-   - Polish room creation/joining forms
    - Add form validation
    - Implement room leave functionality
 
@@ -36,7 +35,7 @@ gantt
     Basic room functionality :done, 2025-05-29, 1d
     Room management         :done, 2025-05-30, 1d
     Vote statistics         :done, 2025-05-31, 1d
-    Room routing            :2025-05-31, 1d
+    Room routing            :done 2025-05-31, 1d
 ```
 
 ## Key Updates
