@@ -28,14 +28,15 @@ const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
 
 export default function RoomClient({ roomId }: { roomId: string }) {
   const { submitVote, revealVotes, newVoting, joinRoom } = useWebSocket()
-  const { room, userId, error } = useRoomStore()
+  const { room, userId, error, clearRoom } = useRoomStore()
   const confirmDialog = useRef<HTMLDialogElement>(null)
   const router = useRouter()
 
+  // Join room on roomId init/change
   useEffect(() => {
     const userData = localStorage.getItem('scrumPokerUser')
     if (!userData) {
-      router.push('/')
+      redirectToHome();
       return
     }
 
@@ -56,11 +57,12 @@ export default function RoomClient({ roomId }: { roomId: string }) {
     }
   }, [userId])
 
+  // Redirect to home on error
   useEffect(() => {
     if (error === 'ROOM_NOT_FOUND' || error === 'DUPLICATE_PSEUDONYM') {
-      router.push('/')
+      redirectToHome()
     }
-  }, [error, router])
+  }, [error, router, clearRoom])
 
   const stats = useMemo(() => {
     if (!room || !room.revealed) return null
@@ -74,6 +76,12 @@ export default function RoomClient({ roomId }: { roomId: string }) {
       median: calculateMedian(votes)
     }
   }, [room])
+
+  const redirectToHome = () => {
+    clearRoom()
+    localStorage.removeItem('scrumPokerUser')
+    router.push('/')
+  }
 
   const handleVote = (vote: number | '?') => {
     if (room && userId) {

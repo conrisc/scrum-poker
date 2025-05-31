@@ -21,18 +21,20 @@ interface RoomStore {
   room: VotingRoom | null
   userId: string | null
   error: string | null
-  setRoom: (room: VotingRoom) => void
-  setUserId: (userId: string) => void
+  setRoom: (room: VotingRoom | null) => void
+  setUserId: (userId: string | null) => void
   setError: (error: string | null) => void
+  clearRoom: () => void
 }
 
 const roomStore = createStore<RoomStore>((set) => ({
   room: null,
   userId: null,
   error: null,
-  setRoom: (room: VotingRoom) => set({ room }),
-  setUserId: (userId: string) => set({ userId }),
+  setRoom: (room: VotingRoom | null) => set({ room }),
+  setUserId: (userId: string | null) => set({ userId }),
   setError: (error: string | null) => set({ error }),
+  clearRoom: () => set({ room: null, userId: null, error: null })
 }))
 
 export const useRoomStore = () => useStore(roomStore)
