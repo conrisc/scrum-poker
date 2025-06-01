@@ -10,7 +10,7 @@ export default function ScrumPoker() {
   const router = useRouter()
   const [pseudonym, setPseudonym] = useState('')
   const [roomId, setRoomId] = useState('')
-  const [isCreatingRoom, setIsCreatingRoom] = useState(false)
+  const [mode, setMode] = useState<'join' | 'create'>('join')
 
   useEffect(() => {
     if (room) {
@@ -32,7 +32,6 @@ export default function ScrumPoker() {
   const handleCreateRoom = () => {
     if (pseudonym.length >= 2) {
       createRoom(pseudonym)
-      setIsCreatingRoom(true)
     }
   }
 
@@ -51,7 +50,16 @@ export default function ScrumPoker() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-4">
         <h1 className="text-2xl font-bold text-center">Scrum Poker</h1>
-        
+
+        <div className="tabs tabs-box mb-4 justify-center tabs-lg">
+          <input type="radio" name="join_mode_tab" className="tab [--tab-bg:#00c951]" checked={mode === 'join'} aria-label="Join Room" readOnly
+            onClick={() => setMode('join')}
+          />
+          <input type="radio" name="create_mode_tab" className="tab [--tab-bg:#2b7fff]" checked={mode === 'create'} aria-label="Create Room" readOnly
+            onClick={() => setMode('create')}
+          />
+        </div>
+
         <div className="space-y-2">
           <label className="block text-sm font-medium">
             Your Name
@@ -60,14 +68,14 @@ export default function ScrumPoker() {
             type="text"
             value={pseudonym}
             onChange={(e) => setPseudonym(e.target.value)}
-            className="w-full p-2 border rounded"
+            className={`w-full p-2 border rounded ${mode ==='create' ? 'mb-[86px]' : ''}`}
             placeholder="Enter your name"
             minLength={2}
             maxLength={18}
           />
         </div>
 
-        {!isCreatingRoom && (
+        {mode === 'join' && (
           <div className="space-y-2">
             <label className="block text-sm font-medium">
               Room Code
@@ -84,24 +92,19 @@ export default function ScrumPoker() {
           </div>
         )}
 
-        <div className="flex gap-2">
-          {!isCreatingRoom && (
-            <button
-              onClick={handleJoinRoom}
-              className="flex-1 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              disabled={!pseudonym || !roomId}
-            >
-              Join Room
-            </button>
-          )}
-          <button
-            onClick={handleCreateRoom}
-            className="flex-1 bg-green-500 text-white p-2 rounded hover:bg-green-600"
-            disabled={!pseudonym}
-          >
-            {isCreatingRoom ? 'Creating Room...' : 'Create Room'}
-          </button>
-        </div>
+        <button
+          onClick={mode === 'join' ? handleJoinRoom : handleCreateRoom}
+          className={`w-full ${
+            mode === 'create' ? 'bg-blue-500' : 'bg-green-500'
+          } text-white p-2 rounded hover:opacity-90`}
+          disabled={
+            mode === 'join' 
+              ? !pseudonym || !roomId 
+              : !pseudonym
+          }
+        >
+          {mode === 'join' ? 'Join Room' : 'Create Room'}
+        </button>
 
         {error && (
           <div className="text-red-500 text-sm">

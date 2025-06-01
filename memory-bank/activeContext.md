@@ -1,7 +1,7 @@
 # Active Context
 
 ## Current Focus
-- Polish room creation/joining forms
+- Polish room UI: voting cards, participants list, statistics, buttons
 
 ## Next Implementation Steps
 
@@ -14,11 +14,9 @@
    - Handle connection errors gracefully
 
 3. **Voting Interface**
-   - Room management UI polish
    - Add vote submission feedback
 
-
-3. **Completed Tasks**
+4. **Completed Tasks**
 ```mermaid
 gantt
     title Development Progress

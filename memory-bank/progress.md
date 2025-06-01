@@ -14,9 +14,9 @@
 - [x] Vote statistics calculation
 - [x] Room routing /{roomId} with error handling
 - [x] Room leaving functionality
+- [x] Improved room creation/joining forms
 
 ## In Progress
-- [ ] Polish room creation/joining forms
 - [ ] Voting card components (80%)
 - [ ] Participant list display (50%)
 
@@ -38,3 +38,4 @@ None yet
 - 2025-05-31: Implemented vote statistics (average & median)
 - 2025-05-31: Added routing for room with error handling
 - 2025-06-01: Implemented room leaving functionality
+- 2025-06-01: Improved room creation/joining forms
