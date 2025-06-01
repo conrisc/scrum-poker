@@ -1,14 +1,12 @@
 # Active Context
 
 ## Current Focus
-- Implement room leaving
+- Polish room creation/joining forms
 
 ## Next Implementation Steps
 
 1. **Room Management**
-   - Polish room creation/joining forms
    - Add form validation
-   - Implement room leave functionality
 
 2. **WebSocket Enhancements**
    - Implement automatic reconnection
@@ -36,7 +34,8 @@ gantt
     Basic room functionality :done, 2025-05-29, 1d
     Room management         :done, 2025-05-30, 1d
     Vote statistics         :done, 2025-05-31, 1d
-    Room routing            :done 2025-05-31, 1d
+    Room routing            :done, 2025-05-31, 1d
+    Room leaving            :done, 2025-06-01, 1d
 ```
 
 ## Key Updates

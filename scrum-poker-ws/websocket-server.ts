@@ -129,6 +129,15 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('room-updated', room);
   });
 
+  socket.on('leave-room', (roomId: string) => {
+    const room = rooms.get(roomId);
+    socket.leave(roomId);
+    if (room) {
+      room.participants = room.participants.filter(p => p.id !== userId);
+      io.to(roomId).emit('room-updated', room);
+    }
+  });
+
   socket.on('disconnect', () => {
     rooms.forEach(room => {
       room.participants = room.participants.filter(p => p.id !== userId);

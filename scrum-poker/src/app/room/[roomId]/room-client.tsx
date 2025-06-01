@@ -27,7 +27,7 @@ function calculateMedian(votes: (number | '?')[]): number | null {
 const FIBONACCI_VALUES: (number | '?')[] = [0.5, 1, 2, 3, 5, 8, 13, 21, '?']
 
 export default function RoomClient({ roomId }: { roomId: string }) {
-  const { submitVote, revealVotes, newVoting, joinRoom, isConnected } = useWebSocket()
+  const { submitVote, revealVotes, newVoting, joinRoom, leaveRoom, isConnected } = useWebSocket()
   const { room, userId, error, clearRoom } = useRoomStore()
   const confirmDialog = useRef<HTMLDialogElement>(null)
   const router = useRouter()
@@ -113,6 +113,13 @@ export default function RoomClient({ roomId }: { roomId: string }) {
     confirmDialog.current?.close()
   }
 
+  const handleLeaveRoom = () => {
+    if (room) {
+      leaveRoom(room.id)
+    }
+    redirectToHome('User left room')
+  }
+
   if (!room) {
     return null
   }
@@ -160,6 +167,12 @@ export default function RoomClient({ roomId }: { roomId: string }) {
               className="w-full p-3 rounded-lg bg-green-500 hover:bg-green-600 text-white"
             >
               New Voting
+            </button>
+            <button
+              onClick={handleLeaveRoom}
+              className="w-full p-3 rounded-lg bg-red-500 hover:bg-red-600 text-white"
+            >
+              Leave Room
             </button>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function ScrumPoker() {
-  const { createRoom, joinRoom } = useWebSocket()
+  const { createRoom, joinRoom, leaveRoom } = useWebSocket()
   const { room, error, userId, clearRoom } = useRoomStore()
   const router = useRouter()
   const [pseudonym, setPseudonym] = useState('')
@@ -13,6 +13,9 @@ export default function ScrumPoker() {
   const [isCreatingRoom, setIsCreatingRoom] = useState(false)
 
   useEffect(() => {
+    if (room) {
+      leaveRoom(room.id)
+    }
     clearRoom()
   }, [])
 
@@ -40,6 +43,7 @@ export default function ScrumPoker() {
   }
 
   if (room) {
+    console.log("Room already exists", room)
     return null
   }
 
