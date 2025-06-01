@@ -1,11 +1,12 @@
 # Active Context
 
 ## Current Focus
-- Polish room creation/joining forms
+- Implement room leaving
 
 ## Next Implementation Steps
 
 1. **Room Management**
+   - Polish room creation/joining forms
    - Add form validation
    - Implement room leave functionality
 
